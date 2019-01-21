@@ -3,11 +3,21 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import App from './components/App';
 
-
-ReactDOM.render((
+const Root = () => (
   <BrowserRouter>
-    <App />
+      <App />
   </BrowserRouter>
-), document.getElementById('root'));
+);
+
+ReactDOM.render(
+  <Root />,
+  document.getElementById('root')
+);
+
+//ReactDOM.render((
+//  <BrowserRouter>
+//    <App />
+//  </BrowserRouter>
+//), document.getElementById('root'));
 
 module.hot.accept();

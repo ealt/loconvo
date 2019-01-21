@@ -1,14 +1,14 @@
 import React from "react";
 
-class Root extends React.Component {
+class LocalMap extends React.Component {
   render() {
     return (
       <div>
-        Root
+        Map
       </div>
     )
     ;
   }
 }
 
-export default Root;
+export default LocalMap;
