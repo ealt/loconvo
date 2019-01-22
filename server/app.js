@@ -1,32 +1,44 @@
 // libraries
-const http = require("http");
-const express = require("express");
-const path = require("path");
-const io = require("socket.io")(http);
+const http = require('http');
+const bodyParser = require('body-parser');
 const session = require('express-session');
+const express = require('express');
+const path = require('path');
+const socketio = require('socket.io');
 
 // local dependencies
-const db = require("./db");
+const db = require('./db');
 const passport = require('./passport');
-const api = require("./routes/api");
+const api = require('./routes/api');
 
 // initialize express app
 const app = express();
-const publicPath = path.resolve(__dirname, "..", "client", "dist");
+const publicPath = path.resolve(__dirname, '..', 'socket/dist');
 
+// set POST request body parser
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// set up sessions
 app.use(session({
   secret: 'session-secret',
   resave: 'false',
-  saveUninitialized: true
-}))
+  saveUninitialized: 'true'
+}));
 
 // hook up passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get(["/profile", "/conversations", "/map",], (req, res) => {
+app.get(["/profile/:userID", "/conversations", "/convo/:convoID", "/map",], (req, res) => {
   res.sendFile(path.join(publicPath, "index.html"));
 });
+
+/*
+app.get(['/profile/:user'], function (req, res) {
+  res.sendFile(path.join(__dirname, '../socket/dist', 'index.html'));
+});
+*/
 
 // authentication routes
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
@@ -50,28 +62,6 @@ app.get('/logout', function(req, res) {
 app.use('/api', api );
 app.use(express.static(publicPath));
 
-// port config
-const port = 3000;
-const server = http.Server(app);
-
-server.listen(port, function() {
-  console.log('Server running on port: ' + port);
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // 404 route
 app.use(function(req, res, next) {
   const err = new Error('Not Found');
@@ -88,8 +78,18 @@ app.use(function(err, req, res, next) {
   });
 });
 
+// port config
+const port = 3000; // config variable
+const server = http.Server(app);
 
+// socket stuff
+const io = socketio(server);
+app.set('socketio', io);
 
+io.on('connection', function(socket) {
+  console.log('a user connected');
+});
 
-
-
+server.listen(port, function() {
+  console.log('Server running on port: ' + port);
+});

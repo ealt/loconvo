@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Component } from 'react';
 
-class Profile extends React.Component {
+class Profile extends Component {
   constructor(props) {
     super(props);
 
@@ -12,13 +12,14 @@ class Profile extends React.Component {
   }
 
   componentDidMount() {
-    this.getProfile(this.props.match.params.user, this.props.userInfo._id);
+    this.getProfile(this.props.match.params.userId, this.props.userInfo._id);
     document.title = "Profile Page";
   }
   
   render() {
     return (
       <div>
+        <div>Profile</div>
         {this.props.userInfo.name} is viewing {this.state.name}'s Profile as
         {this.state.profileOwner ? (" the owner") : (" a guest")}
       </div>

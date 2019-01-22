@@ -1,19 +1,18 @@
-import React from "react";
+import React, { Component } from 'react';
 
-class Home extends React.Component {
+class Home extends Component {
   render() {
     const isLoggedIn = this.props.userInfo !== null;
     return (
       <div>
+        <div>Home</div>
         <div>
-          Home
           {isLoggedIn ? (
             <div>You are logged in</div>
           ) : (
             <div>You are not logged in</div>
           )}
         </div>
-        
       </div>
     );
   }

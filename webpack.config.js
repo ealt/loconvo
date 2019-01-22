@@ -44,6 +44,7 @@ module.exports = {
       '/logout': 'http://localhost:3000',
       '/profile': 'http://localhost:3000',
       '/conversations': 'http://localhost:3000',
+      '/convo': 'http://localhost:3000',
       '/map': 'http://localhost:3000',
     }
   }

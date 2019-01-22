@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from 'react';
 import "../css/app.css";
 
 import { Route, Switch, withRouter } from 'react-router-dom';
@@ -7,6 +7,7 @@ import NavBar from "./modules/NavBar";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Conversations from "./pages/Conversations";
+import Convo from "./pages/Convo";
 import LocalMap from "./pages/LocalMap";
 //import { runInThisContext } from "vm";
 
@@ -17,7 +18,7 @@ const routes = [
     key: "home"
   },
   {
-    path: "/profile/:user",
+    path: "/profile/:userId",
     component: Profile,
     key: "profile"
   },
@@ -27,23 +28,31 @@ const routes = [
     key: "conversations"
   },
   {
+    path: "/convo/:convoId",
+    component: Convo,
+    key: "convo"
+  },
+  {
     path: "/map",
     component: LocalMap,
     key: "map"
   }
 ]
 
-class App extends React.Component {
+class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      userInfo: null
+      userInfo: null,
+      latitude: null,
+      longitude: null,
     };
   }
 
   componentDidMount() {
     this.getUser();
+    this.getLocation();
   }
 
   render() {
@@ -88,6 +97,23 @@ class App extends React.Component {
             }
         }
     );
+  }
+
+  getLocation = () => {
+    /*
+    $.getJSON( '//ip-api.com/json?callback=?', function( data ) {
+          console.log( JSON.stringify( data, null, 2 ) );
+    });
+    
+    http://www.geoplugin.net/json.gp?ip=xx.xx.xx.xx
+    */
+
+    this.setState({
+      latitude: 0,
+      longitude: 0,
+    });
+    console.log(this.state.latitude);
+    console.log(this.state.longitude);
   }
 }
 

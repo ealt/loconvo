@@ -1,13 +1,12 @@
-import React from "react";
+import React, { Component } from 'react';
 
-class LocalMap extends React.Component {
+class LocalMap extends Component {
   render() {
     return (
       <div>
-        Map
+        <div>Map</div>
       </div>
-    )
-    ;
+    );
   }
 }
 
