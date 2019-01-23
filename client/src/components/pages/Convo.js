@@ -8,7 +8,7 @@ class Convo extends Component {
   constructor(props) {
     super(props);
 
-    this.socket = io('http://localhost:3000'); // 'http://localhost:3000'
+    this.socket = io(); // 'http://localhost:3000'
 
     this.state = {
       name: null,
