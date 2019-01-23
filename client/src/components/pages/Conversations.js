@@ -34,32 +34,40 @@ class Conversations extends Component {
 
   render() {
     const isLoggedIn = this.props.userInfo !== null;
+    const hasLocation = this.props.latitude !== null && this.props.longitude !== null;
     return (
       <div>
         <div>Conversations</div>
-        {isLoggedIn ? (
-          <NewConvo
-            addConvo = {this.addConvo}
-          />
-        ) : (
+        {hasLocation ? (
           <div>
-            You must be logged in to create a conversation
-          </div>
-        )}
-        <div>
-          {this.state.convos ? (
-            this.state.convos.map(convoObj => (
-              <ConvoLink 
-                convoInfo={convoObj.convo}
-                key={convoObj.convo._id}
-              />
-            ))
+              {isLoggedIn ? (
+                <div>
+                  <NewConvo addConvo = {this.addConvo}/>
+                </div>
+              ) : (
+                <div>
+                  You must be logged in to create a conversation
+                </div>
+              )}
+
+              {this.state.convos ? (
+                <div>
+                {this.state.convos.map(convoObj => (
+                 <ConvoLink 
+                    convoInfo={convoObj.convo}
+                    key={convoObj.convo._id}
+                  />
+                ))}
+                </div>
+              ) : (
+                <div>Be the first one to start a conversation!</div>
+              )}
+            </div>
           ) : (
-            <div>Be the first one to start a conversation!</div>
+            <div>You must have a location to view conversations</div>
           )}
         </div>
-      </div>
-    );
+      );
   }
 
   getConvos = () => {

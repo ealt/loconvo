@@ -52,7 +52,6 @@ class App extends Component {
 
   componentDidMount() {
     this.getUser();
-    this.getLocation();
   }
 
   render() {
@@ -60,13 +59,18 @@ class App extends Component {
       <div>
         <NavBar
           userInfo={this.state.userInfo}
+          setLocation={this.setLocation.bind(this)}
           logout={this.logout}
         />
         <Switch>
           {routes.map(({path, component:C, key}, i) => (
             <Route 
               exact path={path}
-              render={(props) => <C {...props} userInfo={this.state.userInfo}/>}
+              render={(props) => <C {...props} 
+                userInfo={this.state.userInfo}
+                latitude={this.state.latitude}
+                longitude={this.state.longitude}
+              />}
               key={key}
             />
           ))}
@@ -78,7 +82,7 @@ class App extends Component {
   logout = () => {
     this.setState({
         userInfo: null
-    })
+    });
   };
 
   getUser = () => {    
@@ -99,21 +103,11 @@ class App extends Component {
     );
   }
 
-  getLocation = () => {
-    /*
-    $.getJSON( '//ip-api.com/json?callback=?', function( data ) {
-          console.log( JSON.stringify( data, null, 2 ) );
-    });
-    
-    http://www.geoplugin.net/json.gp?ip=xx.xx.xx.xx
-    */
-
+  setLocation = (lat, lon) => {
     this.setState({
-      latitude: 0,
-      longitude: 0,
+      latitude: lat,
+      longitude: lon,
     });
-    console.log(this.state.latitude);
-    console.log(this.state.longitude);
   }
 }
 

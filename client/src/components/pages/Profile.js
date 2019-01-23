@@ -5,23 +5,27 @@ class Profile extends Component {
     super(props);
 
     this.state = {
-      name: null,
       id: null,
-      profileOwner: null,
+      name: null,
     }
   }
 
   componentDidMount() {
-    this.getProfile(this.props.match.params.userId, this.props.userInfo._id);
+    this.getProfile(this.props.match.params.userId);
     document.title = "Profile Page";
   }
   
   render() {
+    const isLoggedIn = this.props.userInfo !== null;
+    const profileOwner = isLoggedIn && this.state.id === this.props.userInfo._id
     return (
       <div>
         <div>Profile</div>
-        {this.props.userInfo.name} is viewing {this.state.name}'s Profile as
-        {this.state.profileOwner ? (" the owner") : (" a guest")}
+        <div>
+          {isLoggedIn ? this.props.userInfo.name : ("anon ")} 
+          is viewing {this.state.name}'s Profile as
+          {profileOwner ? (" the owner") : (" a guest")}
+        </div>
       </div>
     )
     ;
@@ -33,14 +37,9 @@ class Profile extends Component {
       .then(
         userObj => {
           this.setState({
-            name: userObj.name,
             id: id,
+            name: userObj.name,
           });
-          id === ownId ? (
-            this.setState({profileOwner: true})
-          ) : (
-            this.setState({profileOwner: false})
-          );
         }
       )
   }
