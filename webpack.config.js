@@ -46,6 +46,7 @@ module.exports = {
       '/conversations': 'http://localhost:3000',
       '/convo': 'http://localhost:3000',
       '/map': 'http://localhost:3000',
+      '/socket.io': 'https://localhost:5000',
     }
   }
 };

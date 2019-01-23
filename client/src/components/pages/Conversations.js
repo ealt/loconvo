@@ -8,7 +8,7 @@ class Conversations extends Component {
   constructor(props) {
     super(props);
 
-    this.socket = io('http://localhost:3000');
+    this.socket = io('http://localhost:3000'); // 'http://localhost:3000'
 
     this.state = {
       convos: [],
@@ -20,8 +20,14 @@ class Conversations extends Component {
   componentDidMount() {
     this._isMounted = true;
     this.socket.on('convo', (convoObj) => { if (this._isMounted) {
+      const dist = this.getDist(convoObj);
+      const weight = this.getWeight(convoObj, dist);
       this.setState({
-        convos: [{convo: convoObj}].concat(this.state.convos)
+        convos: [{
+          convo: convoObj,
+          dist: dist,
+          weight: weight,
+        }].concat(this.state.convos)
       });}
     });
     this.getConvos();
@@ -35,6 +41,7 @@ class Conversations extends Component {
   render() {
     const isLoggedIn = this.props.userInfo !== null;
     const hasLocation = this.props.latitude !== null && this.props.longitude !== null;
+    this.state.convos.sort((a, b) => a.weight - b.weight);
     return (
       <div>
         <div>Conversations</div>
@@ -55,6 +62,7 @@ class Conversations extends Component {
                 {this.state.convos.map(convoObj => (
                  <ConvoLink 
                     convoInfo={convoObj.convo}
+                    dist={convoObj.dist}
                     key={convoObj.convo._id}
                   />
                 ))}
@@ -75,19 +83,45 @@ class Conversations extends Component {
       .then(res => res.json())
       .then(convoObjs => 
         convoObjs.reverse().map((convoObj) => {
-          this.setState({
-            convos: (this.state.convos).concat({convo: convoObj})
-          })
-        })
-      );
+          this.checkDist(convoObj);
+        }));
   }
 
-  addConvo = (convo_name) => {
-    const body = {'convo_name': convo_name};
+  checkDist = (convoObj) => {
+    const dist = this.getDist(convoObj);
+    const weight = this.getWeight(convoObj, dist);
+    if (dist < convoObj.radius) {
+      this.setState({
+        convos: (this.state.convos).concat({
+          convo: convoObj,
+          dist: dist,
+          weight: weight,
+        })
+      })
+    }
+  }
+
+  getDist = (convoObj) => {
+    const dy = convoObj.latitude  - this.props.latitude;
+    const dx = convoObj.longitude - this.props.longitude;
+    return (Math.sqrt((dx * dx) + (dy * dy)));
+  }
+
+  getWeight = (convoObj, dist) => {
+    return dist;
+  }
+
+  addConvo = (newConvo) => {
+    const body = {
+      'convo_name': newConvo.name,
+      'latitude': this.props.latitude,
+      'longitude': this.props.longitude,
+      'radius': newConvo.radius,
+    };
     fetch('/api/convo', {
       method: 'POST',
       headers: {'content-type': 'application/json'},
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     });
   }
 }

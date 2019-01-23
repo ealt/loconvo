@@ -27,7 +27,6 @@ class NavBar extends Component {
                         <a className="nav-item nav-link" href="/auth/google">Login</a>
                     )}
                     <Link to="/conversations" className="nav-item nav-link">Conversations</Link>
-                    <Link to="/map" className="nav-item nav-link">Map</Link>
                 </div>
                 <form>
                     <input 

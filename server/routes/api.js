@@ -34,7 +34,6 @@ router.get(
     function(req, res) {
         req.query._id !== undefined ?
             Convo.findOne({ _id: req.query._id }, function(err, convo) {
-                console.log(convo.name)
                 res.send(convo);
             })
             :
@@ -53,6 +52,9 @@ router.post(
             'creator_id': req.user._id,
             'creator_name': req.user.name,
             'convo_name': req.body.convo_name,
+            'latitude': req.body.latitude,
+            'longitude': req.body.longitude,
+            'radius': req.body.radius,
         });
         newConvo.save((err, convoObj) => {
             const io = req.app.get('socketio');

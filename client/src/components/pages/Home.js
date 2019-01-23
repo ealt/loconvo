@@ -25,19 +25,9 @@ class Home extends Component {
             <div>You do not have a location</div>
           )}
         </div>
-        <button
-          type="submit"
-          value="Submit"
-          onClick={this.handleSubmit}
-        >Execute Test</button>
       </div>
     );
   }
-
-  handleSubmit = (event) => {
-    console.log("Success");
-  }
-
 }
 
 export default Home;

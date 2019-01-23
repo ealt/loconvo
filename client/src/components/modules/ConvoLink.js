@@ -13,6 +13,7 @@ class ConvoLink extends Component {
         <Link to={"/convo/" + this.props.convoInfo._id}>
           {this.props.convoInfo.convo_name}
         </Link>
+        <div>Distance: {Math.round(this.props.dist * 100) / 100}</div>
       </div>
     );
   }

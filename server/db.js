@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // set up mongoDB connection
-const mongoURL = 'mongodb+srv://user:user@cluster0-lphdw.mongodb.net/test?retryWrites=true';
+const mongoURL = process.env.ATLAS_SRV;
 const options = { useNewUrlParser: true };
 mongoose.connect(mongoURL, options);
 mongoose.Promise = global.Promise;

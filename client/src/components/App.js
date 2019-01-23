@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import Conversations from "./pages/Conversations";
 import Convo from "./pages/Convo";
 import LocalMap from "./pages/LocalMap";
+import NotFound from "./pages/NotFound";
 //import { runInThisContext } from "vm";
 
 const routes = [
@@ -66,14 +67,23 @@ class App extends Component {
           {routes.map(({path, component:C, key}, i) => (
             <Route 
               exact path={path}
-              render={(props) => <C {...props} 
+              render={(props) => 
+                <C {...props} 
+                  userInfo={this.state.userInfo}
+                  latitude={this.state.latitude}
+                  longitude={this.state.longitude}
+                />}
+              key={key}
+            />
+          ))}
+          <Route
+            path="*"
+            render={(props) => <NotFound {...props} 
                 userInfo={this.state.userInfo}
                 latitude={this.state.latitude}
                 longitude={this.state.longitude}
               />}
-              key={key}
-            />
-          ))}
+          />
         </Switch>
       </div>
     );

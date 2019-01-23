@@ -5,7 +5,8 @@ class NewConvo extends Component {
     super(props);
 
     this.state = {
-      value: '',
+      name: '',
+      radius: 0.5,
     };
   }
 
@@ -17,8 +18,14 @@ class NewConvo extends Component {
           <input 
             type="text" 
             placeholder="Create a new conversation" 
-            value={this.state.value}
-            onChange={this.handleChange}
+            value={this.state.name}
+            onChange={this.handleNameChange}
+          />
+          <input 
+            type="number" 
+            placeholder="Choose a radius" 
+            value={this.state.radius}
+            onChange={this.handleRadiusChange}
           />
         </form>
         <div>
@@ -32,14 +39,28 @@ class NewConvo extends Component {
     );
   }
 
-  handleChange = (event) => {
-    this.setState({value: event.target.value});
+  handleNameChange = (event) => {
+    this.setState({name: event.target.value});
+  }
+
+  handleRadiusChange = (event) => {
+    this.setState({radius: event.target.value});
   }
 
   handleSubmit = (event) => {
-    event.preventDefault();
-    this.props.addConvo(this.state.value);
-    this.setState({value: ''});
+    //event.preventDefault();
+    const hasInput = (this.state.name !== '' && this.state.radius);
+    hasInput ?
+      this.createConvo()
+    :
+      alert("New conversations need a name and radius")
+    ;
+  }
+
+  createConvo = () => {
+    this.props.addConvo(this.state);
+    this.setState({name: ''});
+    this.setState({radius: 0.5});
   }
 }
 
