@@ -15,7 +15,7 @@ const api = require('./routes/api');
 
 // initialize express app
 const app = express();
-const publicPath = path.resolve(__dirname, '..', 'socket/dist');
+const publicPath = path.resolve(__dirname, '..', 'client/dist');
 
 // set POST request body parser
 app.use(bodyParser.urlencoded({ extended: false }));
