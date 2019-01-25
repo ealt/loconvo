@@ -46,8 +46,6 @@ class App extends Component {
     super(props);
     this.state = {
       userInfo: null,
-      latitude: null,
-      longitude: null,
     };
   }
 
@@ -70,8 +68,7 @@ class App extends Component {
               render={(props) => 
                 <C {...props} 
                   userInfo={this.state.userInfo}
-                  latitude={this.state.latitude}
-                  longitude={this.state.longitude}
+                  setLocation={this.setLocation.bind(this)}
                 />}
               key={key}
             />
@@ -80,8 +77,6 @@ class App extends Component {
             path="*"
             render={(props) => <NotFound {...props} 
                 userInfo={this.state.userInfo}
-                latitude={this.state.latitude}
-                longitude={this.state.longitude}
               />}
           />
         </Switch>
@@ -114,10 +109,30 @@ class App extends Component {
   }
 
   setLocation = (lat, lon) => {
-    this.setState({
+    /*this.setState({
       latitude: lat,
       longitude: lon,
-    });
+    });*/
+    const body = {
+      'latitude': lat,
+      'longitude': lon,
+    };
+    fetch('/api/location', {
+      method: 'POST',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify(body),
+    })
+    .then(this.updateUserInfo)
+  }
+
+  updateUserInfo = () => {
+    if (this.state.userInfo) {
+      fetch("/api/user?_id=" + this.state.userInfo._id)
+        .then(res => res.json())
+        .then(userObj => {
+          this.setState({userInfo: userObj})
+        })
+    }
   }
 }
 

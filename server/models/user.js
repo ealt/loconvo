@@ -6,6 +6,8 @@ const UserModelSchema = new mongoose.Schema (
   {
     name        	: String,
     googleid     	: String,
+    latitude      : Number,
+    longitude     : Number,
   },
   {timestamps: {createdAt: 'createdAt'}}
 );

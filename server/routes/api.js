@@ -28,6 +28,24 @@ router.get('/user', function(req, res) {
     });
 });
 
+router.post(
+    '/location',
+    connect.ensureLoggedIn(),
+    function(req, res) {    
+        User.updateOne({ _id: req.user._id }, {$set: {
+            latitude: req.body.latitude,
+            longitude: req.body.longitude,
+        }}, (err, results) => {
+            if (err) {
+                console.log(err.message);
+            } else {
+                console.log(results);
+            }
+        });
+        res.send();
+    }
+);
+
 // convos
 router.get(
     '/convo',

@@ -17,7 +17,9 @@ passport.use(new GoogleStrategy({
     if (!user) {
       const user = new User({
         name: profile.displayName,
-        googleid: profile.id
+        googleid: profile.id,
+        latitude: null,
+        longitude: null,
       });
 
       user.save(function(err) {

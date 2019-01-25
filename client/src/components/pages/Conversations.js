@@ -8,9 +8,12 @@ class Conversations extends Component {
   constructor(props) {
     super(props);
 
-    this.socket = io(); // 'http://localhost:3000'
+    this.socket = io(process.env.PORT ? undefined : 'http://localhost:3000');
 
     this.state = {
+      isLoggedIn: this.props.userInfo !== null,
+      hasLocation: this.props.userInfo !== null && this.props.userInfo.latitude !== null && this.props.userInfo.longitude !== null,
+      sortByLocation: true,
       convos: [],
     };
 
@@ -19,18 +22,20 @@ class Conversations extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    this.socket.on('convo', (convoObj) => { if (this._isMounted) {
-      const dist = this.getDist(convoObj);
-      const weight = this.getWeight(convoObj, dist);
-      this.setState({
-        convos: [{
-          convo: convoObj,
-          dist: dist,
-          weight: weight,
-        }].concat(this.state.convos)
-      });}
-    });
-    this.getConvos();
+    if (this.state.hasLocation) {
+      this.socket.on('convo', (convoObj) => { if (this._isMounted) {
+        const dist = this.getDist(convoObj);
+        const weight = this.getWeight(convoObj, dist);
+        this.setState({
+          convos: [{
+            convo: convoObj,
+            dist: dist,
+            weight: weight,
+          }].concat(this.state.convos)
+        });}
+      });
+      this.getConvos();
+    }
     document.title = "Local Conversations"
   }
 
@@ -39,21 +44,28 @@ class Conversations extends Component {
   }
 
   render() {
-    const isLoggedIn = this.props.userInfo !== null;
-    const hasLocation = this.props.latitude !== null && this.props.longitude !== null;
-    this.state.convos.sort((a, b) => a.weight - b.weight);
+    this.state.sortByLocation ?
+      this.state.convos.sort((a, b) => a.weight - b.weight)
+    :
+      this.state.convos.sort((a, b) => a.createdAt - b.createdAt)
+    ;
     return (
       <div>
         <div>Conversations</div>
-        {hasLocation ? (
+        {this.state.isLoggedIn ? (
           <div>
-              {isLoggedIn ? (
+              {this.state.hasLocation ? (
                 <div>
+                  <div>
+                    <div>You have a location</div>
+                    <div>latitude: {this.props.userInfo.latitude}</div>
+                    <div>longitude: {this.props.userInfo.longitude}</div>
+                  </div>
                   <NewConvo addConvo = {this.addConvo}/>
                 </div>
               ) : (
                 <div>
-                  You must be logged in to create a conversation
+                  You must have a location to view conversations
                 </div>
               )}
 
@@ -72,7 +84,7 @@ class Conversations extends Component {
               )}
             </div>
           ) : (
-            <div>You must have a location to view conversations</div>
+            <div>You must be logged in to create a conversation</div>
           )}
         </div>
       );
@@ -102,8 +114,8 @@ class Conversations extends Component {
   }
 
   getDist = (convoObj) => {
-    const dy = convoObj.latitude  - this.props.latitude;
-    const dx = convoObj.longitude - this.props.longitude;
+    const dy = convoObj.latitude  - this.props.userInfo.latitude;
+    const dx = convoObj.longitude - this.props.userInfo.longitude;
     return (Math.sqrt((dx * dx) + (dy * dy)));
   }
 
@@ -114,10 +126,13 @@ class Conversations extends Component {
   addConvo = (newConvo) => {
     const body = {
       'convo_name': newConvo.name,
-      'latitude': this.props.latitude,
-      'longitude': this.props.longitude,
+      'latitude': this.props.userInfo.latitude,
+      'longitude': this.props.userInfo.longitude,
       'radius': newConvo.radius,
     };
+    console.log("addConvo");
+    console.log(this.props.userInfo.latitude);
+    console.log(this.props.userInfo.longitude);
     fetch('/api/convo', {
       method: 'POST',
       headers: {'content-type': 'application/json'},

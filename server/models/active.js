@@ -2,18 +2,17 @@
 const mongoose = require('mongoose');
 
 // define a schema
-const ConvoModelSchema = new mongoose.Schema (
+const ActiveModelSchema = new mongoose.Schema (
   {
-    creator_id    : String,
-    creator_name  : String,
+    user_id       : String,
+    user_name     : String,
+    convo_id      : String,
     convo_name    : String,
     latitude      : Number,
     longitude     : Number,
-    radius        : Number,
-    participants  : Array,
   },
   {timestamps: {createdAt: 'createdAt'}}
 );
 
 // compile model from schema
-module.exports = mongoose.model('ConvoModel', ConvoModelSchema);
+module.exports = mongoose.model('ActiveModel', ActiveModelSchema);

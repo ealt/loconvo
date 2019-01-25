@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class Home extends Component {  
   render() {
     const isLoggedIn = this.props.userInfo !== null;
-    const hasLocation = this.props.latitude !== null && this.props.longitude !== null;
+    const hasLocation = isLoggedIn && this.props.userInfo.latitude !== null && this.props.userInfo.longitude !== null;
     return (
       <div>
         <div>Home</div>
@@ -18,8 +18,8 @@ class Home extends Component {
           {hasLocation ? (
             <div>
               <div>You have a location</div>
-              <div>latitude: {this.props.latitude}</div>
-              <div>longitude: {this.props.longitude}</div>
+              <div>latitude: {this.props.userInfo.latitude}</div>
+              <div>longitude: {this.props.userInfo.longitude}</div>
             </div>
           ) : (
             <div>You do not have a location</div>

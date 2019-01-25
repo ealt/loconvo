@@ -7,6 +7,8 @@ class Profile extends Component {
     this.state = {
       id: null,
       name: null,
+      lat: 0,
+      lon: 0,
     }
   }
 
@@ -26,6 +28,30 @@ class Profile extends Component {
           is viewing {this.state.name}'s Profile as
           {profileOwner ? (" the owner") : (" a guest")}
         </div>
+        {profileOwner ? (
+          <div>
+            <form>
+              <input 
+                type="number" 
+                placeholder="lat" 
+                value={this.state.lat}
+                onChange={this.handleLatChange}
+              />
+            </form>
+            <form>
+              <input 
+                type="number" 
+                placeholder="lon" 
+                value={this.state.lon}
+                onChange={this.handleLonChange}
+              />
+            </form>
+            <button onClick={this.handleSetSubmit}>Set Location</button>
+            <button onClick={this.handleGetSubmit}>Update Location</button>
+          </div>) 
+          :
+          (<div/>)
+        }
       </div>
     )
     ;
@@ -42,6 +68,41 @@ class Profile extends Component {
           });
         }
       )
+  }
+
+  handleLatChange = (event) => {
+    this.setState({lat: event.target.value});
+  }
+
+  handleLonChange = (event) => {
+    this.setState({lon: event.target.value});
+  }
+
+  handleSetSubmit = () => {
+    event.preventDefault();
+    this.props.setLocation(this.state.lat, this.state.lon);
+  }
+
+  handleGetSubmit = () => {
+    event.preventDefault();
+    const options = {
+        enableHighAccuracy: true,
+        timout: 10000,
+        maximumAge: 0,
+    }
+    navigator.geolocation.getCurrentPosition(
+        this.locateSuccess,
+        this.locateError,
+        options
+    );
+  }
+
+  locateSuccess = (pos) => {
+    this.props.setLocation(pos.coords.latitude, pos.coords.longitude)
+  }
+
+  locateError = (pos) => {
+    alert("Sorry, failed to get position")
   }
 }
 
